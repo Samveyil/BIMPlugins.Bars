@@ -1,1 +1,1 @@
-# BIMPlugins.ProgressBar
+# BIMPlugins.Bars
