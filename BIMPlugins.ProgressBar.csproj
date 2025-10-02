@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<PlatformTarget>x64</PlatformTarget>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<LangVersion>latest</LangVersion>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+		<Configurations>Debug; R2019; R2025</Configurations>
+	</PropertyGroup>
+
+	<!-- R2019 -->
+	<PropertyGroup Condition="'$(Configuration)' == 'R2019'">
+		<TargetFramework>net47</TargetFramework>
+		<RevitVersion>2019</RevitVersion>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\R$(RevitVersion)\</OutputPath>
+		<DefineConstants>R$(RevitVersion)</DefineConstants>
+		<NoWarn>MSB3052</NoWarn>
+		<DebugType>None</DebugType>
+	</PropertyGroup>
+
+	<!-- R2025 -->
+	<PropertyGroup Condition="'$(Configuration)' == 'R2025'">
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<RevitVersion>2025</RevitVersion>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\R$(RevitVersion)\</OutputPath>
+		<DefineConstants>R$(RevitVersion)</DefineConstants>
+		<NoWarn>MSB3052</NoWarn>
+		<DebugType>None</DebugType>
+	</PropertyGroup>
+
+	<!-- Debug -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<TargetFramework>net47</TargetFramework>
+		<RevitVersion>2019</RevitVersion>
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>DEBUG;R$(RevitVersion)</DefineConstants>
+		<DebugType>Full</DebugType>
+	</PropertyGroup>
+
+
+	<!-- Fody -->
+	<ItemGroup>
+		<PackageReference Include="PropertyChanged.Fody" Version="3.*" IncludeAssets="build; compile" PrivateAssets="all" />
+	</ItemGroup>
+	<PropertyGroup>
+		<WeaverConfiguration>
+			<Weavers>
+				<PropertyChanged />
+			</Weavers>
+		</WeaverConfiguration>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*-*" IncludeAssets="build; compile" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
+		<PackageReference Include="System.Drawing.Common" Version="7.*" IncludeAssets="build; compile" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controls\Themes\" />
+	</ItemGroup>
+</Project>
