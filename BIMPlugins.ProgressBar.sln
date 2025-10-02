@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIMPlugins.ProgressBar", "BIMPlugins.ProgressBar.csproj", "{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIMPlugins.ProgressBar", "source\BIMPlugins.ProgressBar.csproj", "{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,12 +12,12 @@ Global
 		R2025|Any CPU = R2025|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.R2019|Any CPU.ActiveCfg = R2019|Any CPU
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.R2019|Any CPU.Build.0 = R2019|Any CPU
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.R2025|Any CPU.ActiveCfg = R2025|Any CPU
-		{7DDCE8A0-AABB-4733-983E-68F0D29CBD82}.R2025|Any CPU.Build.0 = R2025|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.R2019|Any CPU.ActiveCfg = R2019|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.R2019|Any CPU.Build.0 = R2019|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.R2025|Any CPU.ActiveCfg = R2025|Any CPU
+		{D2B99C9E-F83F-4F60-3210-0AEF6B8911E1}.R2025|Any CPU.Build.0 = R2025|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
