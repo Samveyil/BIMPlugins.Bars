@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace BIMPlugins.ProgressBar.Extensions
+namespace BIMPlugins.Bars.Extensions
 {
     /// <summary>
     /// VisualTreeHelperUtils

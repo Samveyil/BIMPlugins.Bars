@@ -1,11 +1,11 @@
-﻿using BIMPlugins.ProgressBar.Controls;
-using BIMPlugins.ProgressBar.Utils;
+﻿using BIMPlugins.Bars.Controls;
+using BIMPlugins.Bars.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace BIMPlugins.ProgressBar
+namespace BIMPlugins.Bars
 {
     /// <summary>
     /// RevitProgressBar

@@ -1,4 +1,4 @@
-﻿namespace BIMPlugins.ProgressBar
+﻿namespace BIMPlugins.Bars
 {
     /// <summary>
     /// ApplicationUtils

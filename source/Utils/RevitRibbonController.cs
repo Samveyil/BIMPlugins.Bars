@@ -1,6 +1,6 @@
 ﻿using UIFramework;
 
-namespace BIMPlugins.ProgressBar.Utils
+namespace BIMPlugins.Bars.Utils
 {
     /// <summary>
     /// RevitRibbonController

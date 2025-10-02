@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace BIMPlugins.ProgressBar.Utils
+namespace BIMPlugins.Bars.Utils
 {
     internal class RelayCommand : ICommand
     {

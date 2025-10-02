@@ -1,19 +1,19 @@
-﻿using BIMPlugins.ProgressBar.Extensions;
+﻿using BIMPlugins.Bars.Extensions;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using UIFramework;
 
-namespace BIMPlugins.ProgressBar.Utils
+namespace BIMPlugins.Bars.Utils
 {
     /// <summary>
     /// StatusBarController
     /// </summary>
     public class StatusBarController
     {
-        static Grid RootGrid;
-        static DialogBarControl InternalControl;
-        static ContentPresenter _controlPresenter;
+        private static Grid RootGrid;
+        private static DialogBarControl InternalControl;
+        private static ContentPresenter _controlPresenter;
         static StatusBarController()
         {
             RootGrid = MainWindow.getMainWnd().FindChild<Grid>("rootGrid");

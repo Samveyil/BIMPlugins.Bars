@@ -1,7 +1,7 @@
-﻿using BIMPlugins.ProgressBar.Controls.Themes;
+﻿using BIMPlugins.Bars.Controls.Themes;
 using System.Windows.Input;
 
-namespace BIMPlugins.ProgressBar.Controls
+namespace BIMPlugins.Bars.Controls
 {
     /// <summary>
     /// Interaction logic for ProgressBarStackPanel.xaml

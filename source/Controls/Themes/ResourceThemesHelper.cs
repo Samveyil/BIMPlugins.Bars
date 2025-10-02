@@ -1,10 +1,10 @@
-﻿using BIMPlugins.ProgressBar.Extensions;
+﻿using BIMPlugins.Bars.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace BIMPlugins.ProgressBar.Controls.Themes
+namespace BIMPlugins.Bars.Controls.Themes
 {
     /// <summary>
     /// ResourceThemesHelper
