@@ -43,6 +43,11 @@
 		<DebugType>Full</DebugType>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<PackageId>BIMPlugins.Bars</PackageId>
+		<Version>1.0.0</Version>
+		<ProjectGuid>{B7F23B6D-72A2-455A-B263-1F23BE86F6DC}</ProjectGuid>
+	</PropertyGroup>
 
 	<!-- Fody -->
 	<ItemGroup>
