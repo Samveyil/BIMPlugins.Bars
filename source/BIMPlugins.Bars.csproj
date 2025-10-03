@@ -52,6 +52,7 @@
 	<PropertyGroup>
 		<GitHubRepositoryOwner>Samveyil</GitHubRepositoryOwner>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/Samveyil/BIMPlugins.Bars</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
