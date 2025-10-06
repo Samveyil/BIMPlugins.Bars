@@ -2,41 +2,38 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<PlatformTarget>x64</PlatformTarget>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<LangVersion>latest</LangVersion>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-		<Configurations>Debug; R2019; R2025</Configurations>
+		<Configurations>Debug; Release</Configurations>
 	</PropertyGroup>
 
-	<!-- R2019 -->
-	<PropertyGroup Condition="'$(Configuration)' == 'R2019'">
-		<TargetFramework>net47</TargetFramework>
-		<RevitVersion>2019</RevitVersion>
+	<PropertyGroup>
+		<TargetFrameworks>net47;net8.0-windows</TargetFrameworks>
+	</PropertyGroup>
+	<Choose>
+		<When Condition="$(TargetFramework.StartsWith('net4'))">
+			<PropertyGroup>
+				<RevitVersion>2019</RevitVersion>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<RevitVersion>2025</RevitVersion>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
 		<Optimize>true</Optimize>
-		<OutputPath>bin\R$(RevitVersion)\</OutputPath>
+		<OutputPath>bin\Release\</OutputPath>
 		<DefineConstants>R$(RevitVersion)</DefineConstants>
 		<NoWarn>MSB3052</NoWarn>
 		<DebugType>None</DebugType>
 	</PropertyGroup>
 
-	<!-- R2025 -->
-	<PropertyGroup Condition="'$(Configuration)' == 'R2025'">
-		<TargetFramework>net8.0-windows</TargetFramework>
-		<RevitVersion>2025</RevitVersion>
-		<Optimize>true</Optimize>
-		<OutputPath>bin\R$(RevitVersion)\</OutputPath>
-		<DefineConstants>R$(RevitVersion)</DefineConstants>
-		<NoWarn>MSB3052</NoWarn>
-		<DebugType>None</DebugType>
-	</PropertyGroup>
-
-	<!-- Debug -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-		<TargetFramework>net47</TargetFramework>
-		<RevitVersion>2019</RevitVersion>
 		<DebugSymbols>true</DebugSymbols>
 		<OutputPath>bin\Debug\</OutputPath>
 		<DefineConstants>DEBUG;R$(RevitVersion)</DefineConstants>
@@ -45,16 +42,37 @@
 
 	<PropertyGroup>
 		<PackageId>BIMPlugins.Bars</PackageId>
-		<Version>1.0.0</Version>
+		<Version>2.0.1</Version>
 		<ProjectGuid>{B7F23B6D-72A2-455A-B263-1F23BE86F6DC}</ProjectGuid>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Company>BIMPlugins</Company>
+		<Authors>Samir Shibliev</Authors>
+		<Description>Revit Package $(PackageId)</Description>
+		<CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AssemblyName>$(PackageId)</AssemblyName>
+		<Product>$(PackageId)</Product>
+		<PackageAssemblyVersion>.$(Version)</PackageAssemblyVersion>
+		<Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<GitHubRepositoryOwner>Samveyil</GitHubRepositoryOwner>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<RepositoryUrl>https://github.com/Samveyil/BIMPlugins.Bars</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/$(GitHubRepositoryOwner)/$(PackageId)</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/$(GitHubRepositoryOwner)/$(PackageId)</RepositoryUrl>
+		<RepositoryType>github</RepositoryType>
+		<PackageIconUrl />
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="PropertyChanged.Fody" Version="3.*" IncludeAssets="build; compile" PrivateAssets="all" />
 	</ItemGroup>
@@ -72,9 +90,5 @@
 
 	<ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
 		<PackageReference Include="System.Drawing.Common" Version="7.*" IncludeAssets="build; compile" PrivateAssets="All" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Controls\Themes\" />
 	</ItemGroup>
 </Project>
