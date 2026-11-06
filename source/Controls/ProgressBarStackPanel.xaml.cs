@@ -1,4 +1,5 @@
 ﻿using BIMPlugins.Bars.Controls.Themes;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace BIMPlugins.Bars.Controls
@@ -119,6 +120,23 @@ namespace BIMPlugins.Bars.Controls
             /// <see langword="true"/> to show the cancel button. Default is <see langword="false"/>.
             /// </summary>
             public bool HasCancelButton { get; set; } = false;
+
+            /// <summary>
+            /// Caption of the cancel button. Defaults to <c>"Отмена"</c> when the UI culture
+            /// (<see cref="CultureInfo.CurrentUICulture"/>, set by Revit from its interface language) is Russian,
+            /// and to <c>"Cancel"</c> for any other language.
+            /// </summary>
+            public string CancelText { get; set; } = GetDefaultCancelText();
+
+            /// <summary>
+            /// Returns the default cancel button caption for the current UI culture:
+            /// <c>"Отмена"</c> for Russian, <c>"Cancel"</c> otherwise.
+            /// </summary>
+            /// <returns>Localized cancel button caption.</returns>
+            public static string GetDefaultCancelText()
+            {
+                return CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ru" ? "Отмена" : "Cancel";
+            }
         }
     }
 }

@@ -190,6 +190,14 @@ using (var progressBar = new RevitProgressBar(hasCancelButton: true))
 }
 ```
 
+The button caption follows the Revit interface language (Revit sets `CultureInfo.CurrentUICulture` from it):
+**Отмена** in Russian Revit, **Cancel** in any other language, including English Revit started with
+`/language ENU` on Russian Windows. Override the caption with `SetCancelText`:
+
+```C#
+revitProgressBar.SetCancelText("Abbrechen");
+```
+
 In a manual loop call `IsCancelling()` on every iteration: the first call also binds the cancel button.
 
 ```C#
@@ -261,6 +269,7 @@ namespace RevitAddin.Commands
 | `SetMaximumValue(double)` | Value of a full bar (default `100`). |
 | `SetIsIndeterminate(bool)` | Continuous animation without a percentage. |
 | `SetHasCancelButton(bool)` | Shows or hides the cancel button. |
+| `SetCancelText(string)` | Cancel button caption (default: `Отмена` in Russian Revit, `Cancel` otherwise). |
 | `Increment(int = 1)` | Adds to the current value and refreshes the UI. |
 | `IsCancelling()` | `true` if the cancel button was pressed or `Cancel()` was called. |
 | `Cancel()` | Requests cancellation; `Run` methods stop after the current item. |
