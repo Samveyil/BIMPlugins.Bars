@@ -4,37 +4,46 @@ using System.Windows.Input;
 namespace BIMPlugins.Bars.Controls
 {
     /// <summary>
-    /// Interaction logic for ProgressBarStackPanel.xaml
+    /// WPF control that renders the progress bar, the current operation text and an optional cancel button.
+    /// It is hosted in the Revit status bar by <see cref="RevitProgressBar"/>.
     /// </summary>
-    /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/progressbar-styles-and-templates?view=netframeworkdesktop-4.8
+    /// <remarks>
+    /// The control binds to <see cref="Data"/>, which is used as its <c>DataContext</c>.
+    /// Light/dark theme resources are applied automatically according to the current Revit theme.
+    /// Styles are based on
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/progressbar-styles-and-templates?view=netframeworkdesktop-4.8">ProgressBar styles and templates</see>.
+    /// </remarks>
     public partial class ProgressBarStackPanel
     {
         /// <summary>
-        /// ProgressBarData
+        /// View model the control is bound to. Changing its properties updates the UI.
         /// </summary>
         public ProgressBarData Data { get; } = new ProgressBarData();
+
         /// <summary>
-        /// ProgressBarStackPanel
+        /// Creates the control without a cancel button and with a 0–100 range.
         /// </summary>
         public ProgressBarStackPanel()
         {
             Initialize();
         }
+
         /// <summary>
-        /// ProgressBarStackPanel
+        /// Creates the control with a 0–100 range.
         /// </summary>
-        /// <param name="hasCancelButton"></param>
+        /// <param name="hasCancelButton"><see langword="true"/> to show the cancel button.</param>
         public ProgressBarStackPanel(bool hasCancelButton)
         {
             Data.HasCancelButton = hasCancelButton;
             Initialize();
         }
+
         /// <summary>
-        /// ProgressBarStackPanel
+        /// Creates the control with the specified range. The current value starts at <paramref name="minimumValue"/>.
         /// </summary>
-        /// <param name="hasCancelButton"></param>
-        /// <param name="minimumValue"></param>
-        /// <param name="maximumValue"></param>
+        /// <param name="hasCancelButton"><see langword="true"/> to show the cancel button.</param>
+        /// <param name="minimumValue">Value that corresponds to an empty bar.</param>
+        /// <param name="maximumValue">Value that corresponds to a full bar.</param>
         public ProgressBarStackPanel(bool hasCancelButton, double minimumValue, double maximumValue)
         {
             Data.HasCancelButton = hasCancelButton;
@@ -43,11 +52,12 @@ namespace BIMPlugins.Bars.Controls
             Data.MaximumValue = maximumValue;
             Initialize();
         }
+
         /// <summary>
-        /// SetCurrentOperation
+        /// Sets the text displayed next to the progress bar.
         /// </summary>
-        /// <param name="currentOperation"></param>
-        /// <returns></returns>
+        /// <param name="currentOperation">Name of the current operation.</param>
+        /// <returns>The same control, for method chaining.</returns>
         public ProgressBarStackPanel SetCurrentOperation(string currentOperation)
         {
             Data.CurrentOperation = currentOperation;
@@ -62,41 +72,51 @@ namespace BIMPlugins.Bars.Controls
         }
 
         /// <summary>
-        /// ProgressBarData
+        /// Bindable state of <see cref="ProgressBarStackPanel"/>.
+        /// <c>INotifyPropertyChanged</c> is implemented at compile time by PropertyChanged.Fody.
         /// </summary>
         [PropertyChanged.AddINotifyPropertyChangedInterface]
         public class ProgressBarData
         {
             /// <summary>
-            /// IsIndeterminate
+            /// <see langword="true"/> to show a continuous animation instead of a percentage. Default is <see langword="false"/>.
             /// </summary>
             public bool IsIndeterminate { get; set; } = false;
+
             /// <summary>
-            /// CurrentOperation
+            /// Text displayed next to the progress bar. Default is <c>"Loading"</c>.
             /// </summary>
             public string CurrentOperation { get; set; } = "Loading";
+
             /// <summary>
-            /// CurrentValue
+            /// Current progress value, between <see cref="MinimumValue"/> and <see cref="MaximumValue"/>. Default is 0.
             /// </summary>
             public double CurrentValue { get; set; } = 0;
+
             /// <summary>
-            /// MinimumValue
+            /// Value that corresponds to an empty bar. Default is 0.
             /// </summary>
             public double MinimumValue { get; set; } = 0;
+
             /// <summary>
-            /// MaximumValue
+            /// Value that corresponds to a full bar. Default is 100.
             /// </summary>
             public double MaximumValue { get; set; } = 100;
+
             /// <summary>
-            /// DisplayValue
+            /// Progress as a percentage (0–100) calculated from <see cref="CurrentValue"/>,
+            /// <see cref="MinimumValue"/> and <see cref="MaximumValue"/>. Returns 100 when the minimum and maximum
+            /// values are equal (compared as integers).
             /// </summary>
             public double DisplayValue => ((int)MaximumValue == (int)MinimumValue) ? 100 : 100.0 * (CurrentValue - MinimumValue) / (MaximumValue - MinimumValue);
+
             /// <summary>
-            /// CommandCancel
+            /// Command executed when the cancel button is pressed.
             /// </summary>
             public ICommand CommandCancel { get; set; }
+
             /// <summary>
-            /// HasCancelButton
+            /// <see langword="true"/> to show the cancel button. Default is <see langword="false"/>.
             /// </summary>
             public bool HasCancelButton { get; set; } = false;
         }

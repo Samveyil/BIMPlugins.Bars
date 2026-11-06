@@ -7,8 +7,19 @@ using UIFramework;
 namespace BIMPlugins.Bars.Utils
 {
     /// <summary>
-    /// StatusBarController
+    /// Replaces the native Revit status bar (bottom of the main window) with custom WPF content and restores it.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The custom content is placed in a <see cref="ContentPresenter"/> in the same grid row as the native
+    /// status bar, which is hidden while the custom content is shown.
+    /// </para>
+    /// <para>
+    /// All members must be called on the Revit UI thread. If the Revit main window grid or the native
+    /// status bar cannot be found, the first access to this class throws a <see cref="TypeInitializationException"/>
+    /// wrapping an <see cref="T:System.InvalidOperationException"/>.
+    /// </para>
+    /// </remarks>
     public class StatusBarController
     {
         private static Grid RootGrid;
@@ -24,14 +35,15 @@ namespace BIMPlugins.Bars.Utils
         }
 
         /// <summary>
-        /// Default StatusBar is visible
+        /// <see langword="true"/> if the native Revit status bar is currently visible.
         /// </summary>
         public static bool IsVisible => InternalControl.Visibility == Visibility.Visible;
 
         /// <summary>
-        /// Show
+        /// Hides the native status bar and shows <paramref name="content"/> in its place,
+        /// replacing any previously shown content.
         /// </summary>
-        /// <param name="content"></param>
+        /// <param name="content">WPF element to display.</param>
         public static void Show(FrameworkElement content)
         {
             InternalControl.Visibility = Visibility.Hidden;
@@ -47,7 +59,7 @@ namespace BIMPlugins.Bars.Utils
         }
 
         /// <summary>
-        /// Hide
+        /// Removes the custom content and makes the native status bar visible again.
         /// </summary>
         public static void Hide()
         {

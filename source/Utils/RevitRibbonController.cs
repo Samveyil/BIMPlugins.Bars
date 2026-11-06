@@ -3,21 +3,22 @@
 namespace BIMPlugins.Bars.Utils
 {
     /// <summary>
-    /// RevitRibbonController
+    /// Enables or disables the Revit ribbon, for example to block user input while a long operation runs.
     /// </summary>
     public class RevitRibbonController
     {
         /// <summary>
-        /// RibbonControl
+        /// The Revit ribbon control (<c>UIFramework.RevitRibbonControl.RibbonControl</c>).
         /// </summary>
         public static RevitRibbonControl RibbonControl => RevitRibbonControl.RibbonControl;
 
         /// <summary>
-        /// Enable
+        /// Enables the ribbon so the user can interact with it again.
         /// </summary>
         public static void Enable() => RibbonControl.IsEnabled = true;
+
         /// <summary>
-        /// Disable
+        /// Disables the ribbon; its buttons stop responding to the user.
         /// </summary>
         public static void Disable() => RibbonControl.IsEnabled = false;
     }
