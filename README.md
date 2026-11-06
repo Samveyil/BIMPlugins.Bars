@@ -16,6 +16,48 @@ Target frameworks: `net47` (Revit 2019–2024) and `net8.0-windows` (Revit 2025+
 dotnet add package BIMPlugins.Bars
 ```
 
+## Quick start
+
+An external command that writes a value to the **Comments** parameter of every wall in the active document
+and shows the progress in the status bar:
+
+```C#
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using BIMPlugins.Bars;
+
+namespace RevitAddin.Commands
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CommandCheckWalls : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            Document document = commandData.Application.ActiveUIDocument.Document;
+
+            var walls = new FilteredElementCollector(document)
+                .OfClass(typeof(Wall))
+                .ToElements();
+
+            using (Transaction transaction = new Transaction(document))
+            {
+                transaction.Start("Check Walls");
+
+                RevitProgressBarUtils.Run("Checking walls", walls, wall =>
+                {
+                    wall.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS)?.Set("Checked");
+                });
+
+                transaction.Commit();
+            }
+
+            return Result.Succeeded;
+        }
+    }
+}
+```
+
 ## RevitProgressBarUtils
 
 `RevitProgressBarUtils` is the shortest way to show progress: it creates a `RevitProgressBar`, runs the loop
@@ -158,7 +200,55 @@ foreach (var element in elements)
 }
 ```
 
-To roll back a transaction when the user cancels, see [CommandCancelTransaction](#commandcanceltransaction).
+### Cancel with transaction rollback
+
+Wrap the transaction in the progress bar and decide at the end: if the user pressed **Cancel**,
+roll everything back, otherwise commit. This command adds a prefix to the names of all sheets:
+
+```C#
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using BIMPlugins.Bars;
+using System.Linq;
+
+namespace RevitAddin.Commands
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CommandRenameSheets : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            Document document = commandData.Application.ActiveUIDocument.Document;
+
+            var sheets = new FilteredElementCollector(document)
+                .OfClass(typeof(ViewSheet))
+                .Cast<ViewSheet>()
+                .ToList();
+
+            using (var revitProgressBar = new RevitProgressBar(hasCancelButton: true))
+            {
+                using (Transaction transaction = new Transaction(document))
+                {
+                    transaction.Start("Rename Sheets");
+
+                    revitProgressBar.Run("Renaming sheets", sheets, sheet =>
+                    {
+                        sheet.Name = "ARCH - " + sheet.Name;
+                    });
+
+                    if (revitProgressBar.IsCancelling())
+                        transaction.RollBack();
+                    else
+                        transaction.Commit();
+                }
+            }
+
+            return Result.Succeeded;
+        }
+    }
+}
+```
 
 ### Methods and properties
 
@@ -224,132 +314,6 @@ catch (Autodesk.Revit.Exceptions.OperationCanceledException)
 finally
 {
     RevitOptionsBar.Hide();
-}
-```
-
-## Revit Commands Examples
-
-Complete `IExternalCommand` examples you can copy into an add-in.
-
-### CommandProgressBar
-
-The simplest command: shows the progress bar for 100 steps using `RevitProgressBarUtils`.
-
-```C#
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using BIMPlugins.Bars;
-
-namespace RevitAddin.Commands
-{
-    [Transaction(TransactionMode.Manual)]
-    public class CommandProgressBar : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
-        {
-            UIApplication uiapp = commandData.Application;
-
-            RevitProgressBarUtils.Run(uiapp.Application.VersionName, 100, i =>
-            {
-                System.Threading.Thread.Sleep(20);
-            });
-
-            return Result.Succeeded;
-        }
-    }
-}
-```
-
-### CommandProgressBarCancel
-
-The same loop with a cancel button. `Run` stops as soon as the user presses **Cancel**.
-
-```C#
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using BIMPlugins.Bars;
-
-namespace RevitAddin.Commands
-{
-    [Transaction(TransactionMode.Manual)]
-    public class CommandProgressBarCancel : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
-        {
-            UIApplication uiapp = commandData.Application;
-
-            using (var revitProgressBar = new RevitProgressBar(hasCancelButton: true))
-            {
-                revitProgressBar.Run(uiapp.Application.VersionName, 100, i =>
-                {
-                    System.Threading.Thread.Sleep(20);
-                });
-
-                if (revitProgressBar.IsCancelling())
-                {
-                    return Result.Cancelled;
-                }
-            }
-
-            return Result.Succeeded;
-        }
-    }
-}
-```
-
-### CommandCancelTransaction
-
-Copies the selected elements 50 times inside one transaction. If the user presses **Cancel**,
-the transaction is rolled back and the model stays unchanged.
-
-```C#
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using BIMPlugins.Bars;
-
-namespace RevitAddin.Commands
-{
-    [Transaction(TransactionMode.Manual)]
-    public class CommandCancelTransaction : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-
-            var elementIds = uidoc.Selection.GetElementIds();
-            if (elementIds.Count == 0)
-            {
-                TaskDialog.Show("Copy Elements", "Select elements to copy.");
-                return Result.Failed;
-            }
-
-            using (var revitProgressBar = new RevitProgressBar(hasCancelButton: true))
-            using (var transaction = new Transaction(document, "Copy Elements"))
-            {
-                transaction.Start();
-
-                revitProgressBar.Run("Copy Elements", 50, i =>
-                {
-                    var offset = XYZ.BasisX * (i + 1) * 10;
-                    ElementTransformUtils.CopyElements(document, elementIds, offset);
-                });
-
-                if (revitProgressBar.IsCancelling())
-                {
-                    transaction.RollBack();
-                    return Result.Cancelled;
-                }
-
-                transaction.Commit();
-            }
-
-            return Result.Succeeded;
-        }
-    }
 }
 ```
 
