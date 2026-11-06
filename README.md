@@ -1,7 +1,10 @@
 # BIMPlugins.Bars
 
 [![Revit 2019+](https://img.shields.io/badge/Revit-2019+-blue.svg)](https://github.com/Samveyil/BIMPlugins.Bars)
-[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+[![Visual Studio 2022](https://img.shields.io/badge/Visual%20Studio-2022-blue)](https://github.com/Samveyil/BIMPlugins.Bars)
+[![Nuke](https://img.shields.io/badge/Nuke-Build-blue)](https://nuke.build/)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Samveyil/BIMPlugins.Bars/blob/master/LICENSE.txt)
+[![NuGet](https://img.shields.io/nuget/v/BIMPlugins.Bars.svg)](https://www.nuget.org/packages/BIMPlugins.Bars)
 
 Library for Revit API developers that adds a **progress bar to the Revit status bar** and lets you place
 **custom WPF content in the Revit options bar**.
