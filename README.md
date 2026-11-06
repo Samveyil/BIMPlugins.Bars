@@ -6,8 +6,6 @@
 Library for Revit API developers that adds a **progress bar to the Revit status bar** and lets you place
 **custom WPF content in the Revit options bar**.
 
-Based on [ricaun.Revit.UI.StatusBar](https://github.com/ricaun-io/ricaun.Revit.UI.StatusBar).
-
 Target frameworks: `net47` (Revit 2019–2024) and `net8.0-windows` (Revit 2025+).
 
 ## Installation
@@ -145,11 +143,15 @@ RevitOptionsBar.Hide(TimeSpan.FromSeconds(3));   // hide after a delay (fire-and
 | `Extensions.VisualTreeHelperUtils` | `FindParent<T>` / `FindChild<T>` in the WPF visual tree, optionally by name. |
 | `Controls.Themes.ResourceThemesHelper` | Applies the library's light / dark themes matching the current Revit theme (Revit 2024+). |
 
-## Notes
 
-- Revit UI is accessed through internal assemblies (`UIFramework`, `AdWindows`); the library may need updates for new Revit versions.
-- All members must be called on the Revit UI thread.
+## Credits
+
+Based on [ricaun.Revit.UI.StatusBar](https://github.com/ricaun-io/ricaun.Revit.UI.StatusBar).
 
 ## License
 
-[MIT](LICENSE.txt)
+This project is [licensed](https://github.com/Samveyil/BIMPlugins.Bars/blob/master/LICENSE.txt) under the [MIT License](https://en.wikipedia.org/wiki/MIT_License).
+
+---
+
+Do you like this project? Please [star this project on GitHub](https://github.com/Samveyil/BIMPlugins.Bars/stargazers)!
