@@ -9,7 +9,7 @@
 Library for Revit API developers that adds a **progress bar to the Revit status bar** and lets you place
 **custom WPF content in the Revit options bar**.
 
-![Progress bar in the Revit status bar](assets/ProgressBar.png)
+![Progress bar in the Revit status bar](https://raw.githubusercontent.com/Samveyil/BIMPlugins.Bars/master/assets/ProgressBar.png)
 
 Target frameworks: `net47` (Revit 2019–2024) and `net8.0-windows` (Revit 2025+).
 
@@ -173,7 +173,7 @@ using (var progressBar = new RevitProgressBar())
 
 ### Cancel button
 
-![Progress bar with cancel button](assets/ProgressBarCancel.png)
+![Progress bar with cancel button](https://raw.githubusercontent.com/Samveyil/BIMPlugins.Bars/master/assets/ProgressBarCancel.png)
 
 Enable the cancel button in the constructor or with `SetHasCancelButton`, then check `IsCancelling()`.
 The `Run` methods stop automatically when the button is pressed.
@@ -286,7 +286,7 @@ All `Set*`, `Run` and `Increment` methods return the same instance, so calls can
 `RevitOptionsBar` shows any WPF `FrameworkElement` in the options bar right below the ribbon,
 replacing the native options bar while it is shown.
 
-![Custom options bar](assets/OptionsBar.png)
+![Custom options bar](https://raw.githubusercontent.com/Samveyil/BIMPlugins.Bars/master/assets/OptionsBar.png)
 
 ```C#
 var panel = new StackPanel { Orientation = Orientation.Horizontal };
