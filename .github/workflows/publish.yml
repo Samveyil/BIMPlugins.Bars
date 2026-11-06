@@ -1,0 +1,55 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # SDK 9: the build project targets net9.0.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      # Tag v2.1.0 must match MajorVersion.MinorVersion.MaintenanceVersion in build/Build.cs.
+      # The package gets the same version: 2.1.0, with the net47 and net8.0-windows builds inside.
+      - name: Check tag matches build version
+        shell: pwsh
+        run: |
+          $build = Get-Content build/Build.cs -Raw
+          $parts = 'MajorVersion', 'MinorVersion', 'MaintenanceVersion' | ForEach-Object {
+            if ($build -notmatch "$_\s*=>\s*(\d+)") { throw "$_ is not found in build/Build.cs" }
+            $Matches[1]
+          }
+          $version = $parts -join '.'
+          $tag, $suffix = "${{ github.ref_name }}".TrimStart('v').Split('-', 2)
+          if ($version -ne $tag) { throw "Tag v$tag does not match version $version in build/Build.cs" }
+          # Nuke reads the VersionSuffix parameter from the VERSION_SUFFIX variable
+          if ($suffix) { "VERSION_SUFFIX=$suffix" >> $env:GITHUB_ENV }
+
+      # NUKE 9.0.4 cannot find MSBuild of newer Visual Studio versions on the runner by itself,
+      # so pass the path explicitly: NUKE takes it from the MSBUILD_EXE variable.
+      - name: Locate MSBuild
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+          if (-not $msbuild) { throw "MSBuild was not found by vswhere" }
+          Write-Output "MSBuild: $msbuild"
+          "MSBUILD_EXE=$msbuild" >> $env:GITHUB_ENV
+
+      - name: Build
+        run: dotnet run --project build/_build.csproj -- Compile
+
+      # Trusted Publishing from BIMPlugins.Nuke: with --nuget-user and 'id-token: write' the target exchanges
+      # the GitHub OIDC token for a short-lived nuget.org key itself, no API key is stored anywhere.
+      - name: Push
+        run: dotnet run --project build/_build.csproj --no-build -- PushToNugetRepositiry --nuget-user SamirShibliev
