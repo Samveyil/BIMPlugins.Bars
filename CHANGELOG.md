@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `RevitProgressBarUtils` with one-call `Run` methods.
 - XML documentation for the public API, README with examples and screenshots.
 - Build with NUKE (`BIMPlugins.Nuke` 1.1.5) and publish to nuget.org from GitHub Actions with Trusted Publishing.
-- Symbol package (`.snupkg`) with portable PDBs.
 ### Changed
 - The cancel button caption follows the Revit interface language: `Отмена` for Russian, `Cancel` for any other language (was always `Отмена`).
 - `net8.0-windows` is targeted as `net8.0-windows7.0` so the package builds with MSBuild.

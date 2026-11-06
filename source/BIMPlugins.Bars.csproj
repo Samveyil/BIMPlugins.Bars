@@ -30,7 +30,7 @@
 		<OutputPath>bin\Release\</OutputPath>
 		<DefineConstants>R$(RevitVersion)</DefineConstants>
 		<NoWarn>MSB3052</NoWarn>
-		<DebugType>portable</DebugType>
+		<DebugType>None</DebugType>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -72,8 +72,6 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>$(PackageProjectUrl)/blob/master/CHANGELOG.md</PackageReleaseNotes>
 		<PackageIcon>icon.png</PackageIcon>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
