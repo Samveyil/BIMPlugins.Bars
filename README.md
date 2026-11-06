@@ -190,8 +190,9 @@ using (var progressBar = new RevitProgressBar(hasCancelButton: true))
 }
 ```
 
-The button caption follows the Revit interface language: **Отмена** in Russian Revit, **Cancel** in any
-other language. Override it with `SetCancelText`:
+The button caption follows the Revit interface language (Revit sets `CultureInfo.CurrentUICulture` from it):
+**Отмена** in Russian Revit, **Cancel** in any other language, including English Revit started with
+`/language ENU` on Russian Windows. Override the caption with `SetCancelText`:
 
 ```C#
 revitProgressBar.SetCancelText("Abbrechen");
