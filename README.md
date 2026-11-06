@@ -16,44 +16,6 @@ Target frameworks: `net47` (Revit 2019–2024) and `net8.0-windows` (Revit 2025+
 dotnet add package BIMPlugins.Bars
 ```
 
-## Quick start
-
-A complete external command that processes all walls of the active document with a progress bar:
-
-```C#
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using BIMPlugins.Bars;
-
-[Transaction(TransactionMode.Manual)]
-public class WallsCommand : IExternalCommand
-{
-    public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-    {
-        var document = commandData.Application.ActiveUIDocument.Document;
-
-        var walls = new FilteredElementCollector(document)
-            .OfClass(typeof(Wall))
-            .ToElements();
-
-        using (var transaction = new Transaction(document, "Update walls"))
-        {
-            transaction.Start();
-
-            RevitProgressBarUtils.Run("Updating walls", walls, wall =>
-            {
-                wall.LookupParameter("Comments")?.Set("Checked");
-            });
-
-            transaction.Commit();
-        }
-
-        return Result.Succeeded;
-    }
-}
-```
-
 ## RevitProgressBarUtils
 
 `RevitProgressBarUtils` is the shortest way to show progress: it creates a `RevitProgressBar`, runs the loop
@@ -196,25 +158,7 @@ foreach (var element in elements)
 }
 ```
 
-Roll back the changes if the user cancelled:
-
-```C#
-using (var transaction = new Transaction(document, "Update walls"))
-using (var progressBar = new RevitProgressBar(hasCancelButton: true))
-{
-    transaction.Start();
-
-    progressBar.Run("Updating walls", walls, wall =>
-    {
-        wall.LookupParameter("Comments")?.Set("Checked");
-    });
-
-    if (progressBar.IsCancelling())
-        transaction.RollBack();
-    else
-        transaction.Commit();
-}
-```
+To roll back a transaction when the user cancels, see [CommandCancelTransaction](#commandcanceltransaction).
 
 ### Methods and properties
 
@@ -283,17 +227,131 @@ finally
 }
 ```
 
-## Utilities
+## Revit Commands Examples
 
-| Class | Description |
-|---|---|
-| `RevitProgressBarUtils` | One-call `Run` shortcuts over `RevitProgressBar`. |
-| `Utils.StatusBarController` | Replaces the native Revit status bar with custom WPF content (`Show`, `Hide`, `IsVisible`). |
-| `Utils.RevitRibbonController` | Enables / disables the Revit ribbon. |
-| `ApplicationUtils` | `DoEvents`, `SetCursorWait`, `SetCursorDefault`. |
-| `Extensions.VisualTreeHelperUtils` | `FindParent<T>` / `FindChild<T>` in the WPF visual tree, optionally by name. |
-| `Controls.Themes.ResourceThemesHelper` | Applies the library's light / dark themes matching the current Revit theme (Revit 2024+). |
+Complete `IExternalCommand` examples you can copy into an add-in.
 
+### CommandProgressBar
+
+The simplest command: shows the progress bar for 100 steps using `RevitProgressBarUtils`.
+
+```C#
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using BIMPlugins.Bars;
+
+namespace RevitAddin.Commands
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CommandProgressBar : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            UIApplication uiapp = commandData.Application;
+
+            RevitProgressBarUtils.Run(uiapp.Application.VersionName, 100, i =>
+            {
+                System.Threading.Thread.Sleep(20);
+            });
+
+            return Result.Succeeded;
+        }
+    }
+}
+```
+
+### CommandProgressBarCancel
+
+The same loop with a cancel button. `Run` stops as soon as the user presses **Cancel**.
+
+```C#
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using BIMPlugins.Bars;
+
+namespace RevitAddin.Commands
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CommandProgressBarCancel : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            UIApplication uiapp = commandData.Application;
+
+            using (var revitProgressBar = new RevitProgressBar(hasCancelButton: true))
+            {
+                revitProgressBar.Run(uiapp.Application.VersionName, 100, i =>
+                {
+                    System.Threading.Thread.Sleep(20);
+                });
+
+                if (revitProgressBar.IsCancelling())
+                {
+                    return Result.Cancelled;
+                }
+            }
+
+            return Result.Succeeded;
+        }
+    }
+}
+```
+
+### CommandCancelTransaction
+
+Copies the selected elements 50 times inside one transaction. If the user presses **Cancel**,
+the transaction is rolled back and the model stays unchanged.
+
+```C#
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using BIMPlugins.Bars;
+
+namespace RevitAddin.Commands
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CommandCancelTransaction : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+
+            var elementIds = uidoc.Selection.GetElementIds();
+            if (elementIds.Count == 0)
+            {
+                TaskDialog.Show("Copy Elements", "Select elements to copy.");
+                return Result.Failed;
+            }
+
+            using (var revitProgressBar = new RevitProgressBar(hasCancelButton: true))
+            using (var transaction = new Transaction(document, "Copy Elements"))
+            {
+                transaction.Start();
+
+                revitProgressBar.Run("Copy Elements", 50, i =>
+                {
+                    var offset = XYZ.BasisX * (i + 1) * 10;
+                    ElementTransformUtils.CopyElements(document, elementIds, offset);
+                });
+
+                if (revitProgressBar.IsCancelling())
+                {
+                    transaction.RollBack();
+                    return Result.Cancelled;
+                }
+
+                transaction.Commit();
+            }
+
+            return Result.Succeeded;
+        }
+    }
+}
+```
 
 ## Credits
 
