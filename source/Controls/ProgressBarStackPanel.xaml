@@ -20,7 +20,7 @@
         <Button Margin="4 2"
                 Height="20"
                 Width="54"
-                Content="Отмена"
+                Content="{Binding CancelText}"
                 Command="{Binding CommandCancel}"
                 VerticalAlignment="Center"
                 Visibility="{Binding HasCancelButton, Converter={StaticResource BooleanToVisibilityConverter}}" />

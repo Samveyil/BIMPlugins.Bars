@@ -52,6 +52,7 @@ namespace BIMPlugins.Bars
         /// </summary>
         /// <param name="hasCancelButton">
         /// <see langword="true"/> to show a cancel button. Use <see cref="IsCancelling"/> to check whether it was pressed.
+        /// The button caption follows the Revit interface language; see <see cref="SetCancelText"/>.
         /// </param>
         public RevitProgressBar(bool hasCancelButton = false)
         {
@@ -198,6 +199,18 @@ namespace BIMPlugins.Bars
         public RevitProgressBar SetHasCancelButton(bool hasCancelButton)
         {
             progressBarStackPanel.Data.HasCancelButton = hasCancelButton;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the caption of the cancel button, overriding the default
+        /// (<c>"Отмена"</c> in Russian Revit, <c>"Cancel"</c> in any other language).
+        /// </summary>
+        /// <param name="cancelText">Button caption, for example <c>"Abbrechen"</c>.</param>
+        /// <returns>The same <see cref="RevitProgressBar"/> instance, for method chaining.</returns>
+        public RevitProgressBar SetCancelText(string cancelText)
+        {
+            progressBarStackPanel.Data.CancelText = cancelText;
             return this;
         }
 
