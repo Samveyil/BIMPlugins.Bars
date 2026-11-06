@@ -16,4 +16,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `net8.0-windows` is targeted as `net8.0-windows7.0` so the package builds with MSBuild.
 - The package version is set in `build/Build.cs`.
 
+## [2.0.1] / 2026-11-06
+First release on nuget.org.
+### Features
+- One package for Revit 2019–2025: `net47` (Revit 2019 API) and `net8.0-windows` (Revit 2025 API).
+- `RevitProgressBar`: progress bar in the Revit status bar with `Run`, `Increment`, cancel button, indeterminate mode and refresh settings.
+- `RevitOptionsBar`: custom WPF content in the Revit options bar (`Show`, `Hide`).
+- `StatusBarController` and `RevitRibbonController` to replace the status bar and disable the ribbon during long operations.
+- Package metadata: MIT license, README, icon, project and repository links.
+
 [2.1.0]: https://github.com/Samveyil/BIMPlugins.Bars/tree/v2.1.0
+[2.0.1]: https://www.nuget.org/packages/BIMPlugins.Bars/2.0.1
