@@ -49,7 +49,7 @@
 	<PropertyGroup>
 		<Company>BIMPlugins</Company>
 		<Authors>Samir Shibliev</Authors>
-		<Description>Progress bar in the Autodesk Revit status bar with cancel button and custom WPF content in the Revit options bar. One package for Revit 2019–2025.</Description>
+		<Description>Progress bar in the Autodesk Revit status bar with cancel button and custom WPF content in the Revit options bar.</Description>
 		<PackageTags>revit;revit-api;autodesk;bim;extensions;progressbar;statusbar;optionsbar;ui</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
