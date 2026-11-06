@@ -240,6 +240,8 @@ All `Set*`, `Run` and `Increment` methods return the same instance, so calls can
 `RevitOptionsBar` shows any WPF `FrameworkElement` in the options bar right below the ribbon,
 replacing the native options bar while it is shown.
 
+![Custom options bar](assets/OptionsBar.png)
+
 ```C#
 var panel = new StackPanel { Orientation = Orientation.Horizontal };
 panel.Children.Add(new TextBlock { Text = "Offset:", VerticalAlignment = VerticalAlignment.Center });
