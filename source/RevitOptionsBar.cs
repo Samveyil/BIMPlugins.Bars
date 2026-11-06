@@ -8,6 +8,35 @@ using UIFramework;
 
 namespace BIMPlugins.Bars
 {
+    /// <summary>
+    /// Shows custom WPF content in the Revit options bar (the panel directly below the ribbon),
+    /// in place of the native options bar.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// On first use a new row is inserted into the Revit main window grid right below the ribbon,
+    /// and a <see cref="ContentPresenter"/> hosting the custom content is placed there. The native
+    /// options bar is collapsed while the custom content is shown and restored by <see cref="Hide(bool)"/>.
+    /// </para>
+    /// <para>
+    /// All members must be called on the Revit UI thread.
+    /// </para>
+    /// <para>
+    /// If the Revit main window grid or the native options bar cannot be found, the first access to
+    /// this class throws a <see cref="TypeInitializationException"/> wrapping an <see cref="T:System.InvalidOperationException"/>.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// var panel = new StackPanel { Orientation = Orientation.Horizontal };
+    /// panel.Children.Add(new TextBlock { Text = "Offset:" });
+    /// panel.Children.Add(new TextBox { Width = 80 });
+    ///
+    /// RevitOptionsBar.Show(panel);
+    /// // ... user interaction ...
+    /// RevitOptionsBar.Hide();
+    /// </code>
+    /// </example>
     public static class RevitOptionsBar
     {
         private static readonly Grid RootGrid;
@@ -23,6 +52,11 @@ namespace BIMPlugins.Bars
             if (InternalToolPanel is null) throw new InvalidOperationException("Cannot find internal tool panel in Revit UI");
         }
 
+        /// <summary>
+        /// Shows the options bar again with the content it had before it was hidden
+        /// with <c>Hide(saveContent: true)</c>.
+        /// </summary>
+        /// <remarks>Does nothing if <see cref="Show(FrameworkElement)"/> has never been called.</remarks>
         public static void Show()
         {
             if (_panelPresenter is null) return;
@@ -31,6 +65,12 @@ namespace BIMPlugins.Bars
 
             InternalToolPanel.Height = 0;
         }
+
+        /// <summary>
+        /// Shows <paramref name="content"/> in the options bar, replacing any previous content,
+        /// and collapses the native Revit options bar.
+        /// </summary>
+        /// <param name="content">WPF element to display.</param>
         public static void Show(FrameworkElement content)
         {
             if (!(_panelPresenter is null))
@@ -47,6 +87,13 @@ namespace BIMPlugins.Bars
             InternalToolPanel.Height = 0;
         }
 
+        /// <summary>
+        /// Hides the custom content and restores the native Revit options bar.
+        /// </summary>
+        /// <param name="saveContent">
+        /// <see langword="true"/> to keep the current content so it can be shown again with <see cref="Show()"/>;
+        /// <see langword="false"/> (default) to discard it.
+        /// </param>
         public static void Hide(bool saveContent = false)
         {
             if (_panelPresenter is null) return;
@@ -59,6 +106,14 @@ namespace BIMPlugins.Bars
 
             InternalToolPanel.Height = 26;
         }
+
+        /// <summary>
+        /// Hides the custom content (discarding it) after the specified delay.
+        /// </summary>
+        /// <param name="delay">Time to wait before hiding.</param>
+        /// <remarks>
+        /// This is an <c>async void</c> fire-and-forget method: it returns immediately and cannot be awaited.
+        /// </remarks>
         public static async void Hide(TimeSpan delay)
         {
             await Task.Delay(delay);

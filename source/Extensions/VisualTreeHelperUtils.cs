@@ -4,16 +4,16 @@ using System.Windows.Media;
 namespace BIMPlugins.Bars.Extensions
 {
     /// <summary>
-    /// VisualTreeHelperUtils
+    /// Extension methods for searching the WPF visual tree, based on <see cref="VisualTreeHelper"/>.
     /// </summary>
     public static class VisualTreeHelperUtils
     {
         /// <summary>
-        /// FindParent
+        /// Walks up the visual tree and returns the nearest ancestor of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="child"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of the ancestor to find.</typeparam>
+        /// <param name="child">Element to start from (not included in the search).</param>
+        /// <returns>The nearest matching ancestor, or <see langword="null"/> if none is found.</returns>
         public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
         {
             if (child is null) return null;
@@ -24,13 +24,15 @@ namespace BIMPlugins.Bars.Extensions
 
             return parentElement.FindParent<T>();
         }
+
         /// <summary>
-        /// FindParent
+        /// Walks up the visual tree and returns the nearest ancestor of type <typeparamref name="T"/>
+        /// whose <see cref="FrameworkElement.Name"/> equals <paramref name="name"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="child"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of the ancestor to find.</typeparam>
+        /// <param name="child">Element to start from (not included in the search).</param>
+        /// <param name="name">Required element name (<c>x:Name</c>).</param>
+        /// <returns>The nearest matching ancestor, or <see langword="null"/> if none is found.</returns>
         public static T FindParent<T>(this DependencyObject child, string name) where T : FrameworkElement
         {
             if (child is null) return null;
@@ -42,12 +44,14 @@ namespace BIMPlugins.Bars.Extensions
 
             return parentElement.FindParent<T>(name);
         }
+
         /// <summary>
-        /// FindChild
+        /// Searches the descendants of <paramref name="parent"/> depth-first and returns the first
+        /// element of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parent"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of the descendant to find.</typeparam>
+        /// <param name="parent">Element whose descendants are searched.</param>
+        /// <returns>The first matching descendant, or <see langword="null"/> if none is found.</returns>
         public static T FindChild<T>(this DependencyObject parent) where T : DependencyObject
         {
             if (parent is null) return null;
@@ -63,13 +67,15 @@ namespace BIMPlugins.Bars.Extensions
             }
             return null;
         }
+
         /// <summary>
-        /// FindChild
+        /// Searches the descendants of <paramref name="parent"/> depth-first and returns the first
+        /// element of type <typeparamref name="T"/> whose <see cref="FrameworkElement.Name"/> equals <paramref name="name"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parent"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of the descendant to find.</typeparam>
+        /// <param name="parent">Element whose descendants are searched.</param>
+        /// <param name="name">Required element name (<c>x:Name</c>).</param>
+        /// <returns>The first matching descendant, or <see langword="null"/> if none is found.</returns>
         public static T FindChild<T>(this DependencyObject parent, string name) where T : FrameworkElement
         {
             if (parent is null) return null;
