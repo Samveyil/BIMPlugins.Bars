@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] / 2026-11-06
+### Fixed
+- README images are shown on nuget.org: they now use absolute `raw.githubusercontent.com` links.
+
 ## [2.1.0] / 2026-11-06
 ### Added
 - `RevitProgressBar.SetCancelText` to override the cancel button caption.
@@ -24,5 +28,6 @@ First release on nuget.org.
 - `StatusBarController` and `RevitRibbonController` to replace the status bar and disable the ribbon during long operations.
 - Package metadata: MIT license, README, icon, project and repository links.
 
+[2.1.1]: https://github.com/Samveyil/BIMPlugins.Bars/tree/v2.1.1
 [2.1.0]: https://github.com/Samveyil/BIMPlugins.Bars/tree/v2.1.0
 [2.0.1]: https://www.nuget.org/packages/BIMPlugins.Bars/2.0.1
