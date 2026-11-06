@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<UseWPF>true</UseWPF>
@@ -36,7 +35,7 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<DebugSymbols>true</DebugSymbols>
 		<OutputPath>bin\Debug\</OutputPath>
-		<DefineConstants>DEBUG;R$(RevitVersion)</DefineConstants>
+		<DefineConstants>DEBUG;TRACE;R$(RevitVersion)</DefineConstants>
 		<DebugType>Full</DebugType>
 	</PropertyGroup>
 
@@ -44,12 +43,15 @@
 		<PackageId>BIMPlugins.Bars</PackageId>
 		<Version>2.0.1</Version>
 		<ProjectGuid>{B7F23B6D-72A2-455A-B263-1F23BE86F6DC}</ProjectGuid>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<Company>BIMPlugins</Company>
 		<Authors>Samir Shibliev</Authors>
 		<Description>Revit Package $(PackageId)</Description>
+		<PackageTags>revit;revit-api;autodesk;bim;extensions</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
 	</PropertyGroup>
 
@@ -57,7 +59,7 @@
 		<AssemblyName>$(PackageId)</AssemblyName>
 		<Product>$(PackageId)</Product>
 		<PackageAssemblyVersion>.$(Version)</PackageAssemblyVersion>
-		<Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
+		<Copyright>Copyright © $(CopyrightYears) Samir Shibliev</Copyright>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -65,12 +67,16 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/$(GitHubRepositoryOwner)/$(PackageId)</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/$(GitHubRepositoryOwner)/$(PackageId)</RepositoryUrl>
-		<RepositoryType>github</RepositoryType>
-		<PackageIconUrl />
+		<RepositoryType>git</RepositoryType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>$(PackageProjectUrl)/blob/master/CHANGELOG.md</PackageReleaseNotes>
+		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -90,5 +96,11 @@
 
 	<ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
 		<PackageReference Include="System.Drawing.Common" Version="7.*" IncludeAssets="build; compile" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" Visible="false" />
+		<None Include="..\LICENSE.txt" Pack="true" PackagePath="\" Visible="false" />
+		<None Include="Resources\icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 </Project>
